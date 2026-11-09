@@ -175,7 +175,27 @@ def play(word, initial_tries):
     print("\n")
     while not guessed and tries > 0:
         guess = input("Guess the word:- ").upper()
-        if len(guess) == 1 and guess.isalpha():
+        if guess == "HINT":
+            hint_letter = next(
+                (
+                    letter
+                    for letter in word
+                    if letter.isalpha() and letter not in word_completion
+                ),
+                None,
+            )
+            if hint_letter:
+                print("Hint:", hint_letter)
+                word_as_list = list(word_completion)
+                indices = [i for i, letter in enumerate(word) if letter == hint_letter]
+                for index in indices:
+                    word_as_list[index] = hint_letter
+                word_completion = "".join(word_as_list)
+                if "_" not in word_completion:
+                    guessed = True
+            else:
+                print("No hidden letters left to reveal.")
+        elif len(guess) == 1 and guess.isalpha():
             if guess in guessed_letters:
                 print("You already guessed the letter", guess)
             elif guess not in word:
